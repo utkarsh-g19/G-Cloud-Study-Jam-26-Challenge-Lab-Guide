@@ -37,3 +37,11 @@ Lab numbers follow the order of the campaign's curriculum list.
 - Labs change over time. Each guide states which version of the official page it was checked against, so if your lab page differs, follow your lab page.
 - Never share API keys, project IDs or credentials in screenshots or commits.
 - These guides are unofficial study aids, not affiliated with Google. Use them to learn the material, not to skip it.
+
+# Quick Overview of difficulty level
+
+> Easy labs are straigtforward and short , medium labs are longer , hard labs are very long or have some issues
+
+1. Easy labs : 1,3,4,5,7,9
+2. Medium Labs : 8,10
+3. Hard Labs : 2,6
