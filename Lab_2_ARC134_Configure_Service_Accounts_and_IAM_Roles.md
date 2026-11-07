@@ -22,9 +22,7 @@ The official page describes five outcomes:
 
 Each checkpoint is worth 20 points. The optional Gemini introduction is not one of the five scored checkpoints. The official task labels are numbered Task 2 through Task 6 because Task 1 is the optional Gemini activity; this guide labels the scored sections **Checkpoint 1–5** and shows the official task number beside each one.
 
-**Official lab:** [ARC134 — Google Skills](https://www.skills.google/focuses/67219?locale=en&parent=catalog)  
-**Additional walkthrough:** [ePlus.dev ARC134 walkthrough](https://eplus.dev/configure-service-accounts-and-iam-roles-for-google-cloud-challenge-lab-arc134)  
-**Command reference:** [Cloud-Wala-Banda ARC134 notes](https://github.com/Cloud-Wala-Banda/Google-Cloud-Lab-Solutions/blob/main/Configure%20Service%20Accounts%20and%20IAM%20for%20Google%20Cloud%20Challenge%20Lab.md)
+**Official lab:** [ARC134 — Google Skills](https://www.skills.google/focuses/67219?locale=en&parent=catalog)
 
 > **Important:** Challenge labs can be updated. Resource names and required permissions below follow the publicly available ARC134 instructions and walkthroughs. Before running a command, compare it with the exact wording in your currently active lab. If Google changes a VM name, role, region, zone, or checkpoint, the live lab takes priority.
 
@@ -715,101 +713,3 @@ Return to the lab page and click **Check my progress** for **Use the client libr
 | Python traceback after `source env/bin/activate`             | Activating a virtual environment does not install dependencies into it. The exact traceback from our earlier run was not preserved in the chat record, so its precise root cause cannot be confirmed from that log alone. | Check the final exception line, run `which python`, then `python -m pip show google-cloud-bigquery pandas pyarrow db-dtypes`. Install any missing package in the active environment and retry. |
 
 **Important lesson from our run:** we activated `env` and then ran `python3 query.py`, but the command still produced a traceback. For a reproducible setup, activate the environment, install the dependencies using `python -m pip`, verify the package list, and use the environment's `python query.py`. If a traceback remains, diagnose its final exception line rather than repeatedly reinstalling packages blindly.
-
-# Part C — Final verification checklist
-
-Before ending the lab, return to the official ARC134 page and check each of the five checkpoint cards. The expected score is 20/20 for each item.
-
-- [ ] **Checkpoint 1:** `devops` service account exists.
-- [ ] **Checkpoint 2:** `devops` has `roles/iam.serviceAccountUser` and `roles/compute.instanceAdmin.v1`.
-- [ ] **Checkpoint 3:** `vm-2` exists in the required zone and has the `devops` service account attached.
-- [ ] **Checkpoint 4:** project-level role `customRole` exists and contains both Cloud SQL permissions.
-- [ ] **Checkpoint 5:** `bigquery-qwiklab` has both BigQuery roles, `bigquery-instance` uses that service account, and `query.py` returns query results.
-- [ ] The official page shows **100/100**.
-
-Useful final inspection commands (run from `lab-vm` while the lab is still active):
-
-```bash
-# Project and location
-gcloud config get-value project
-gcloud config get-value compute/zone
-
-# Service accounts
-gcloud iam service-accounts list --format="table(displayName,email)"
-
-# VM identities
-gcloud compute instances describe vm-2 --zone="$ZONE" \
-  --format="value(name,status,serviceAccounts[0].email)"
-gcloud compute instances describe bigquery-instance --zone="$ZONE" \
-  --format="value(name,status,serviceAccounts[0].email)"
-
-# Custom role
-gcloud iam roles describe customRole --project="$PROJECT_ID"
-```
-
-When all five progress checks are green and the score is 100/100, the challenge lab is complete. The course Skill Badge/credential is a separate course-level outcome; follow the course page's credential-claim flow if it displays one.
-
-# Part D — What we learned from the issues in our chat
-
-These notes are included because they are easy points to lose when following short command dumps.
-
-## 1. Finding the service account email
-
-You asked how to retrieve the service account email for ARC134. The command is:
-
-```bash
-gcloud iam service-accounts list \
-  --filter="displayName=devops" \
-  --format="value(email)"
-```
-
-To list every service account and its email:
-
-```bash
-gcloud iam service-accounts list --format="table(displayName,email)"
-```
-
-To see the currently authenticated human/user account (not the service account):
-
-```bash
-gcloud auth list
-```
-
-This distinction matters: `gcloud auth list` and `gcloud iam service-accounts list` answer different questions.
-
-## 2. The BigQuery Python traceback
-
-In our earlier ARC134 session, the terminal showed the virtual environment being activated with `source env/bin/activate`, followed by a traceback from `python3 query.py`. The full traceback text is not available in the retained chat context, so this guide does **not** claim a specific confirmed root cause. The robust resolution path is to verify the active interpreter, install all four dependencies inside that interpreter, use the exact service account email/project ID in the script, and inspect the final traceback line if the run still fails.
-
-## 3. Avoid using a helper script with a hard-coded region
-
-The ePlus article links to a quick automated shell script, but the public script currently sets `us-central1` / `us-central1-a`, while the current walkthrough text for ARC134 says `us-east4` / `us-east4-a`. The script also contains logic that can delete and recreate VMs when it detects a mismatch. For this reason, this guide uses explicit manual commands and the current lab's stated region/zone instead of asking readers to run the script blindly.
-
-## 4. Never carry values from another lab session into a new one
-
-Every challenge-lab session can create a different temporary project and temporary student account. Always rediscover the project ID and service account email during the current run. Do not reuse a previous session's ID or credentials.
-
-# References
-
-1. **Official Google Skills ARC134 challenge lab** — task sequence, five scored checkpoints, lab requirements, and final BigQuery query:  
-   https://www.skills.google/focuses/67219?locale=en&parent=catalog
-2. **ePlus.dev ARC134 walkthrough** — challenge scenario, `lab-vm`, service account names, task flow, region/zone note, and manual walkthrough link:  
-   https://eplus.dev/configure-service-accounts-and-iam-roles-for-google-cloud-challenge-lab-arc134
-3. **Cloud-Wala-Banda command reference** — sample commands for service accounts, IAM bindings, `vm-2`, custom role YAML, and BigQuery setup:  
-   https://github.com/Cloud-Wala-Banda/Google-Cloud-Lab-Solutions/blob/main/Configure%20Service%20Accounts%20and%20IAM%20for%20Google%20Cloud%20Challenge%20Lab.md
-4. **Google Cloud CLI: create a service account**:  
-   https://cloud.google.com/sdk/gcloud/reference/iam/service-accounts/create
-5. **Google Cloud CLI: add a project IAM policy binding**:  
-   https://cloud.google.com/sdk/gcloud/reference/projects/add-iam-policy-binding
-6. **Google Cloud IAM: create and manage custom roles**:  
-   https://cloud.google.com/iam/docs/creating-custom-roles
-7. **Google Cloud Compute Engine: service accounts and scopes**:  
-   https://cloud.google.com/compute/docs/access/service-accounts
-8. **BigQuery: query a public dataset with client libraries**:  
-   https://cloud.google.com/bigquery/docs/quickstarts/quickstart-client-libraries
-9. **ePlus ARC134 helper script (review only; do not blindly execute)** — its published copy hard-codes a different region and includes VM delete/recreate logic:  
-   https://raw.githubusercontent.com/ePlus-DEV/storage/refs/heads/main/labs/ARC134/lab.sh
-
----
-
-_Guide prepared as a practical companion to ARC134. Always follow the active lab page if its task wording, project values, resource names, region, or zone differ from this document._
