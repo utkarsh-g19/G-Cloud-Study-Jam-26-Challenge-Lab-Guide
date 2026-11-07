@@ -6,6 +6,8 @@ Step-by-step guides for the **Google Cloud Learn with Communities 2026 (AI & Clo
 
 | #   | Lab                                                           | ID     | Guide                                                                                                                 |
 | --- | ------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------- |
+| 1   | The Basics of Google Cloud Compute                            | ARC120 | [Open](Lab_01_ARC120_Basics_of_Cloud_Computing.md)                                                                    |
+| 2   | Configure Service Accounts and IAM Roles for Google Cloud     | ARC134 | [Open](Lab_02_ARC134_Configure_Service_Accounts_and_IAM_Roles.md)                                                     |
 | 3   | Implement Speech and Language Solutions with Pre-trained APIs | ARC132 | [Open](Lab_03_ARC132_Implement_Speech_and_Language_Solutions_with_Pre_trained_APIs_Challenge_Lab_Guide.md)            |
 | 4   | Develop AI-Powered Prototypes in Google AI Studio             | GSP529 | [Open](Lab_04_GSP529_Develop_AI_Powered_Prototypes_in_Google_AI_Studio_Challenge_Lab_Guide.md)                        |
 | 5   | Analyze Images with the Cloud Vision API                      | ARC122 | [Open](Lab_05_ARC122_Analyze_Images_with_the_Cloud_Vision_API_Challenge_Lab_Guide.md)                                 |
