@@ -1,6 +1,6 @@
 # GSP515: Explore Generative AI with the Gemini API in Agent Platform (Challenge Lab)
 
-A complete walkthrough with the mistakes we made and how we fixed them.
+A complete walkthrough with the mistakes people usually make and how to fix them.
 
 |                                |                                                                                                         |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------- |
@@ -17,7 +17,7 @@ A complete walkthrough with the mistakes we made and how we fixed them.
 | Create a function call with Gemini (notebook)           | 40     |
 | Describe video contents with Gemini (notebook)          | 40     |
 
-> **How to read this guide.** Steps are numbered in the order you do them. Blocks marked **Mistake we made** show a real error from our run and the fix. Blocks marked **Note** are things the official page doesn't spell out.
+> **How to read this guide.** Steps are numbered in the order you do them. Blocks marked **Mistake to avoid** show a real error people usually run into, and the fix. Blocks marked **Note** are things the official page doesn't spell out.
 >
 > **Values in `UPPERCASE` or `<angle brackets>` are placeholders.** Your lab fills in its own project ID, model ID and so on. Always copy those from your own lab page, not from this guide.
 
@@ -39,7 +39,7 @@ The notebook is pre-written with cells that contain blanks marked `INSERT`. Your
 
 **Agent Platform (formerly Vertex AI).** Google's managed platform for building with AI models. Google renamed Vertex AI to _Gemini Enterprise Agent Platform_. Some pages, links and docs still say "Vertex AI". The underlying API is still `aiplatform.googleapis.com`. This matters later, because searching for "Vertex AI API" in the API Library may not find it.
 
-**Gemini and the model ID.** Gemini is the AI model. A _model ID_ (for example `gemini-3.6-flash` in our run) is the exact name you send to say which version you want. A wrong or misspelled ID gives a "model not found" error.
+**Gemini and the model ID.** Gemini is the AI model. A _model ID_ (for example `gemini-3.6-flash` in the example run) is the exact name you send to say which version you want. A wrong or misspelled ID gives a "model not found" error.
 
 **API, endpoint and location.** An _API_ is a way for programs to talk to a service. The _endpoint_ is its web address. The _location_ says which region handles the request. This lab uses `global`.
 
@@ -72,7 +72,7 @@ The notebook is pre-written with cells that contain blanks marked `INSERT`. Your
 3. Check that the project selector shows a `qwiklabs-gcp-...` project.
 4. Don't click **End Lab** until all three checkpoints are green.
 
-> **Note.** Use only the student account in that window. If you have several student accounts open, the Console and Cloud Shell can end up using different accounts, which causes sign-outs and permission errors. We hit this in later labs.
+> **Note.** Use only the student account in that window. If you have several student accounts open, the Console and Cloud Shell can end up using different accounts, which causes sign-outs and permission errors. People often hit this in later labs.
 
 ---
 
@@ -89,15 +89,15 @@ The notebook is pre-written with cells that contain blanks marked `INSERT`. Your
 echo $PROJECT_ID $LOCATION $API_ENDPOINT $MODEL_ID
 ```
 
-In our run this printed a `qwiklabs-gcp-...` project ID, `global`, `aiplatform.googleapis.com`, and `gemini-3.6-flash`.
+In the example run this printed a `qwiklabs-gcp-...` project ID, `global`, `aiplatform.googleapis.com`, and `gemini-3.6-flash`.
 
-> **Note.** Copy the block from the lab page instead of typing it. It carries your project and the exact model ID. Your model ID may differ from ours.
+> **Note.** Copy the block from the lab page instead of typing it. It carries your project and the exact model ID. Your model ID may differ from the example.
 
 ### 1.2 Enable the API
 
-The official lab tells you to enable the API through the Console (APIs & Services). We hit a problem there:
+The official lab tells you to enable the API through the Console (APIs & Services). People often hit a problem there:
 
-> **Mistake we made.** We searched the API Library for **"vertex ai api"** and got one result, **AlloyDB API**, which is the wrong service. A banner on the page said _"Vertex AI is now Gemini Enterprise Agent Platform."_ The API had been renamed, so the old search term no longer found it.
+> **Mistake to avoid.** People often search the API Library for **"vertex ai api"** and get one result, **AlloyDB API**, which is the wrong service. A banner on the page said _"Vertex AI is now Gemini Enterprise Agent Platform."_ The API had been renamed, so the old search term no longer found it.
 >
 > **Fix.** Skip the library and enable it from Cloud Shell using the service name, which didn't change:
 >
@@ -160,7 +160,7 @@ Click **Check my progress** under Task 1. If it's red, wait 20 seconds and click
 2. Run the **Getting Started** cells **one at a time, top to bottom** with Shift+Enter. Wait for `[*]` to turn into a number before running the next cell.
 3. The cells do four things in order: install the Google Gen AI SDK, restart the kernel, create the client, and import classes.
 
-> **Mistake we nearly made: panicking at red output.** The pip install cell printed yellow `WARNING: Ignoring invalid distribution ~oogle-auth` lines. The restart cell printed a pink `DeprecationWarning` box followed by `{'status': 'ok', 'restart': True}`. Both are **normal and harmless**. The restart worked.
+> **Mistake to avoid: panicking at red output.** The pip install cell printed yellow `WARNING: Ignoring invalid distribution ~oogle-auth` lines. The restart cell printed a pink `DeprecationWarning` box followed by `{'status': 'ok', 'restart': True}`. Both are **normal and harmless**. The restart worked.
 >
 > **Fix / rule.** Don't rerun the restart cell. A restart wipes all variables, and you would have to rerun the client and imports cells again. If you ever do restart, rerun from **Set Google Cloud project information and create client** downward.
 
@@ -199,7 +199,7 @@ model_id = "gemini-3.6-flash"
 
 Use the same model ID you saw in Cloud Shell (`echo $MODEL_ID`). Press Shift+Enter.
 
-> **Mistake we made.** We ran this cell once with `"<<INSERT CORRECT MODEL NAME HERE>>"` still in it, so `model_id` held junk text.
+> **Mistake to avoid.** People often run this cell with `"<<INSERT CORRECT MODEL NAME HERE>>"` still in it, so `model_id` holds junk text.
 >
 > **Fix.** Replace the placeholder and **run the cell again**. Later cells read `model_id`, so a stale value breaks them. A cell number such as `[3]` showing doesn't mean the cell is correct. It only means it ran.
 
@@ -215,7 +215,7 @@ get_current_weather_func = INSERT CORRECT CLASSNAME(
 )
 ```
 
-> **Mistake we made.** We ran the cell as-is and got:
+> **Mistake to avoid.** Running the cell as-is gives:
 >
 > ```
 > SyntaxError: invalid syntax
@@ -338,7 +338,7 @@ for response in responses:
 | `INSERT VIDEO URI`           | The `gs://...mediterraneansea.mp4` path from the cell's comment | Copy it from the comment so it isn't mistyped                            |
 | `INSERT CORRECT METHOD NAME` | `generate_content_stream`                                       | The output loop (`for response in responses`) expects a stream           |
 
-> **Mistake to avoid.** If you use plain `generate_content` here, the result is a single response, and looping over it with `response.text` can fail. We chose `generate_content_stream` to match the loop that's already in the cell. One user on the Google Cloud forum reported an error from that loop on an older version and said `print(responses.text)` worked instead. That's a single user's report, so only try it if you actually hit that error.
+> **Mistake to avoid.** If you use plain `generate_content` here, the result is a single response, and looping over it with `response.text` can fail. Use `generate_content_stream` to match the loop that's already in the cell. One user on the Google Cloud forum reported an error from that loop on an older version and said `print(responses.text)` worked instead. That's a single user's report, so only try it if you actually hit that error.
 >
 > **Don't edit** the `print_multimodal_prompt(contents)` line or the output loop.
 
@@ -373,6 +373,6 @@ The official lab page is the source of truth, and this guide follows its task or
 | Task 4: INSERT cells for the video request                                      | Same steps. Adds the table of four blanks and the streaming explanation.                                                      |
 | The lab's own note about 429 errors                                             | Same advice: wait a minute and rerun.                                                                                         |
 
-> **What the official page doesn't show.** Your exact model ID, project ID and the notebook's INSERT cell wording are filled in or shown only inside your own running lab. Where this guide says "copy from the lab page", do that. The class and method names in Part 2 matched our run, but if your notebook version differs, trust what is in your notebook and use the logic in the tables to decide.
+> **What the official page doesn't show.** Your exact model ID, project ID and the notebook's INSERT cell wording are filled in or shown only inside your own running lab. Where this guide says "copy from the lab page", do that. The class and method names in Part 2 matched the example run, but if your notebook version differs, trust what is in your notebook and use the logic in the tables to decide.
 
 ---

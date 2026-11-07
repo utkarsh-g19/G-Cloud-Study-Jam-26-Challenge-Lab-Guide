@@ -1,13 +1,13 @@
 # GSP319: Build a Website on Google Cloud (Challenge Lab)
 
-A complete walkthrough with the mistakes we made and how we fixed them.
+A complete walkthrough with the mistakes people usually make and how to fix them.
 
 | | |
 |---|---|
 | **Lab ID** | GSP319 |
 | **Official title** | Build a Website on Google Cloud: Challenge Lab |
 | **Scoring** | 100 points across 6 checkpoints |
-| **Time** | 90 minutes of access, about 25 minutes of actual work (our cluster problem cost us extra time) |
+| **Time** | 90 minutes of access, about 25 minutes of actual work (a cluster problem can cost extra time) |
 | **Official page version used** | Manual and tests last updated August 4, 2026 |
 | **Where you work** | Cloud Shell and a browser tab (no notebook this time) |
 
@@ -21,9 +21,9 @@ A complete walkthrough with the mistakes we made and how we fixed them.
 | Task 6: Build the frontend container | 10 |
 | Task 7: Deploy the frontend container | 20 |
 
-> **How to read this guide.** Steps are numbered in the order you do them. Blocks marked **Mistake we made** show a real error from our run and the fix. Blocks marked **Note** are things the official page doesn't spell out.
+> **How to read this guide.** Steps are numbered in the order you do them. Blocks marked **Mistake to avoid** show a real error people usually run into, and the fix. Blocks marked **Note** are things the official page doesn't spell out.
 >
-> **Values written in `UPPERCASE` are placeholders.** Your lab assigns its own image names, container names, cluster name and region. The public version of the lab page leaves these blank, and they only appear inside your running lab. Always copy them from your own lab page. In our run they were `fancy-monolith-351`, `fancy-orders-964`, `fancy-products-304`, `fancy-frontend-538`, cluster `fancy-cluster-159`, and region `us-central1`. Yours will differ.
+> **Values written in `UPPERCASE` are placeholders.** Your lab assigns its own image names, container names, cluster name and region. The public version of the lab page leaves these blank, and they only appear inside your running lab. Always copy them from your own lab page. In the example run they were `fancy-monolith-351`, `fancy-orders-964`, `fancy-products-304`, `fancy-frontend-538`, cluster `fancy-cluster-159`, and region `us-central1`. Yours will differ.
 
 ---
 
@@ -86,7 +86,7 @@ Challenge labs give you the goal but not the exact commands, so you apply what t
 
 > **Note: naming and resources.** The official page asks you to use `e2-medium` and not to oversize anything, and warns that excessive resource use can get the project terminated. Don't create extra clusters or machines.
 
-> **Mistake we made: mixing student accounts.** During this lab our browser signed us out, and the account chooser listed three different student accounts from different labs. Only one belongs to the lab that's running.
+> **Mistake to avoid: mixing student accounts.** During this lab the browser can sign you out, and the account chooser may list several student accounts from different labs. Only one belongs to the lab that's running.
 >
 > **Fix.** Pick the account whose email matches the **Username in your current lab panel**, and use a fresh private window with only that account signed in. Once signed in, open Cloud Shell again and click **Authorize**. Then reconnect to your cluster (see Task 3, step 3.0).
 
@@ -135,11 +135,11 @@ cd ~/monolith-to-microservices/monolith
 gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/MONOLITH_IMAGE_NAME:1.0.0 .
 ```
 
-Replace `MONOLITH_IMAGE_NAME` with the name from your lab page (ours was `fancy-monolith-351`). Keep the final dot. If it asks to enable Cloud Build or Artifact Registry APIs, answer **y**. Wait for `STATUS: SUCCESS`.
+Replace `MONOLITH_IMAGE_NAME` with the name from your lab page (the example used `fancy-monolith-351`). Keep the final dot. If it asks to enable Cloud Build or Artifact Registry APIs, answer **y**. Wait for `STATUS: SUCCESS`.
 
-> **Mistake we made: two problems at once.**
+> **Mistake to avoid: two problems at once.**
 >
-> 1. We pasted the `cd ...` and `gcloud builds submit ...` lines together as one pasted line, and Cloud Shell printed `-bash: cd: too many arguments`. Earlier we had also pressed Ctrl+C mid-build (`Command killed by keyboard interrupt`).
+> 1. People often paste the `cd ...` and `gcloud builds submit ...` lines together as one pasted line, and Cloud Shell prints `-bash: cd: too many arguments`. Pressing Ctrl+C mid-build also causes problems (`Command killed by keyboard interrupt`).
 > 2. The next attempt failed with `ERROR: (gcloud.builds.submit) You do not currently have an active account selected.` Cloud Shell had lost its login, usually because the **Authorize** pop-up was dismissed or hidden.
 >
 > **Fix, in order:**
@@ -167,7 +167,7 @@ Click **Check my progress** under Task 1 (10 points).
 
 The lab gives you a cluster name and a location, and asks for 3 nodes of `e2-medium`.
 
-First, see whether your location is a **zone** (ends in a letter, like `us-central1-a`) or a **region** (like `us-central1`). In our run it was a **region**.
+First, see whether your location is a **zone** (ends in a letter, like `us-central1-a`) or a **region** (like `us-central1`). In the example run it was a **region**.
 
 If it's a zone:
 
@@ -181,7 +181,7 @@ If it's a **region**:
 gcloud container clusters create CLUSTER_NAME --region REGION --num-nodes 1 --machine-type e2-medium
 ```
 
-> **Mistake we made: a quota error from the node count.** We created a regional cluster with `--num-nodes 3`. For a regional cluster, `--num-nodes` means *nodes per zone*, and a region has 3 zones, so we asked for **9 nodes**. The command failed with:
+> **Mistake to avoid: a quota error from the node count.** People often create a regional cluster with `--num-nodes 3`. For a regional cluster, `--num-nodes` means *nodes per zone*, and a region has 3 zones, so that asks for **9 nodes**. The command fails with:
 >
 > ```
 > Quota 'IN_USE_ADDRESSES' exceeded.  Limit: 8.0 in region us-central1
@@ -195,7 +195,7 @@ gcloud container clusters create CLUSTER_NAME --region REGION --num-nodes 1 --ma
 > 4. Recreate with `--num-nodes 1`. That gives 1 node in each of 3 zones, which is the 3 nodes the lab wants.
 > 5. If `SSD_TOTAL_GB` comes back, add `--disk-size 50`.
 >
-> Our final cluster showed `STATUS: RUNNING` and `NUM_NODES: 3`.
+> The final cluster should show `STATUS: RUNNING` and `NUM_NODES: 3`.
 
 Cluster creation takes 5 to 10 minutes. Don't press Ctrl+C.
 
@@ -220,7 +220,7 @@ kubectl create deployment MONOLITH_CONTAINER_NAME --image=gcr.io/${GOOGLE_CLOUD_
 kubectl expose deployment MONOLITH_CONTAINER_NAME --type=LoadBalancer --port 80 --target-port 8080
 ```
 
-In our run the container name matched the image name. **Check** the Task 2 section of your lab page for the container name, because the checker compares it.
+In the example run the container name matched the image name. **Check** the Task 2 section of your lab page for the container name, because the checker compares it.
 
 > **Mistake to avoid.** If you leave a placeholder such as `MONOLITH_IMAGE_NAME` inside a command, Kubernetes rejects it with a confusing error (see Task 7 for the real example).
 
@@ -244,7 +244,7 @@ Click **Check my progress** under Task 2 (20 points).
 
 ### 3.0 Reconnect after a Cloud Shell reset
 
-If you reopened Cloud Shell (we did, after the sign-out), your session has lost its cluster connection and its folder. Run:
+If you reopen Cloud Shell (for example, after a sign-out), your session has lost its cluster connection and its folder. Run:
 
 ```bash
 gcloud auth list
@@ -265,7 +265,7 @@ cd ~/monolith-to-microservices/microservices/src/orders
 gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/ORDERS_IMAGE_NAME:1.0.0 .
 ```
 
-Wait for `STATUS: SUCCESS` (it took us about 40 seconds). Our image was `fancy-orders-964`.
+Wait for `STATUS: SUCCESS` (it took about 40 seconds in the example run). The example image was `fancy-orders-964`.
 
 ### 3.2 Build Products
 
@@ -277,7 +277,7 @@ cd ~/monolith-to-microservices/microservices/src/products
 gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/PRODUCTS_IMAGE_NAME:1.0.0 .
 ```
 
-> **Mistake we made: two errors back to back on the Products build.**
+> **Mistake to avoid: two errors back to back on the Products build.**
 >
 > 1. `ERROR: (gcloud.builds.submit) HTTPError 401: Invalid Credentials. This command is authenticated as student-...@qwiklabs.net`. The login token had gone stale after the sign-out, even though it named the correct account.
 > 2. After reopening Cloud Shell, the next attempt printed `Dockerfile required when specifying --tag`. A fresh Cloud Shell starts in your **home folder** (`~`), not in the folder you were in before, and the build looks for a Dockerfile in the current folder.
@@ -291,7 +291,7 @@ gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/PRODUCTS_IMAGE_NAME:1.
 >
 > Rule: **before every build, check the prompt shows the right folder.**
 
-> **Note: image names differ by service.** Our names ended in different numbers (`fancy-orders-964` and `fancy-products-304`). That looks odd but was correct, because each name comes from the lab page. Don't "fix" one to match the other. Copy each one from the page.
+> **Note: image names differ by service.** The example names ended in different numbers (`fancy-orders-964` and `fancy-products-304`). That looks odd but was correct, because each name comes from the lab page. Don't "fix" one to match the other. Copy each one from the page.
 
 ### 3.3 Verify
 
@@ -430,7 +430,7 @@ You should see `Dockerfile`. Then:
 gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/FRONTEND_IMAGE_NAME:1.0.0 .
 ```
 
-The lab warns this may take a few minutes. Wait for `STATUS: SUCCESS` (ours took 32 seconds and the image was `fancy-frontend-538`). Verify with `gcloud container images list`, which should show four images. Click **Check my progress** under Task 6 (10 points).
+The lab warns this may take a few minutes. Wait for `STATUS: SUCCESS` (in the example run it took 32 seconds and the image was `fancy-frontend-538`). Verify with `gcloud container images list`, which should show four images. Click **Check my progress** under Task 6 (10 points).
 
 If you hit `Dockerfile required` or `401 Invalid Credentials`, use the fixes from Task 3.2.
 
@@ -444,7 +444,7 @@ The frontend listens on **8080** and is exposed externally on port 80.
 kubectl create deployment FRONTEND_CONTAINER_NAME --image=gcr.io/${GOOGLE_CLOUD_PROJECT}/FRONTEND_IMAGE_NAME:1.0.0
 ```
 
-> **Mistake we made: a placeholder left in the command.** We typed the real deployment name but left `FRONTEND_IMAGE_NAME` in the image path. Kubernetes tried to turn that text into a container name and rejected it:
+> **Mistake to avoid: a placeholder left in the command.** People often type the real deployment name but leave `FRONTEND_IMAGE_NAME` in the image path. Kubernetes tried to turn that text into a container name and rejected it:
 >
 > ```
 > Deployment.apps "fancy-frontend-538" is invalid: spec.template.spec.containers[0].name:
@@ -500,4 +500,4 @@ The official lab page is the source of truth, and this guide follows its task or
 | Task 6: build the frontend image | Same steps. Adds the folder check and the verification command. |
 | Task 7: deploy the frontend (8080 to 80) | Same steps. Adds the leftover-placeholder error and the fix. |
 
-> **What the official page doesn't show.** The public page leaves out your region or zone, the cluster name, and the image and container names, because your running lab fills them in. The values in this guide are the ones from our run. Copy yours from your own lab page.
+> **What the official page doesn't show.** The public page leaves out your region or zone, the cluster name, and the image and container names, because your running lab fills them in. The values in this guide are the ones from the example run. Copy yours from your own lab page.
