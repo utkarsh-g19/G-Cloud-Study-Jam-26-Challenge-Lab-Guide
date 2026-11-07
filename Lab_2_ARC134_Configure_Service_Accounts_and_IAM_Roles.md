@@ -8,6 +8,8 @@
 
 ---
 
+# NOTE : This lab has been updated , you can access gemini assist within the lab now. This guide gives you the commands which gemini assist is supposed to give , previously gemini assist was not available due to issues in the lab. You can still use the guide since using gemini assist is not a checkpoint but an optional feature.
+
 ## How to use this guide
 
 This guide follows the same five scored checkpoints as the official ARC134 challenge lab. It does not replace the official lab page: keep the official instructions open, follow their task order, and use this guide when a task is underspecified, when you need a command, or when something fails.
